@@ -10,9 +10,12 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PromotionDto {
+
     private Long id;
-    private String icon;
+    private byte[] icon;
+    private byte[] image;
     private String title;
     private String description;
 }
+
 

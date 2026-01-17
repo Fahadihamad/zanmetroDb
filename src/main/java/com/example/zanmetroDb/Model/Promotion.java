@@ -12,14 +12,23 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Promotion {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String icon;
+    @Lob
+    @Column(columnDefinition = "LONGBLOB")
+    private byte[] icon;
+
+    @Lob
+    @Column(columnDefinition = "LONGBLOB")
+    private byte[] image;
+
     private String title;
 
     @Column(columnDefinition = "TEXT")
     private String description;
 }
+
 

@@ -14,39 +14,57 @@ public class PromotionService {
 
     private final PromotionRepository repository;
 
+    // CREATE
     public PromotionDto save(PromotionDto dto) {
         Promotion e = new Promotion();
         e.setIcon(dto.getIcon());
+        e.setImage(dto.getImage());
         e.setTitle(dto.getTitle());
         e.setDescription(dto.getDescription());
         return toDto(repository.save(e));
     }
 
+    // UPDATE
     public PromotionDto update(PromotionDto dto) {
         Promotion existing = repository.findById(dto.getId()).orElse(null);
         if (existing == null) return null;
 
         existing.setIcon(dto.getIcon());
+        existing.setImage(dto.getImage());
         existing.setTitle(dto.getTitle());
         existing.setDescription(dto.getDescription());
         return toDto(repository.save(existing));
     }
 
+    // GET BY ID
     public PromotionDto findById(Long id) {
         return repository.findById(id).map(this::toDto).orElse(null);
     }
 
+    // GET ALL
     public List<PromotionDto> findAll() {
-        return repository.findAll().stream().map(this::toDto).toList();
+        return repository.findAll()
+                .stream()
+                .map(this::toDto)
+                .toList();
     }
 
+    // DELETE
     public void delete(Long id) {
         repository.deleteById(id);
     }
 
+    // Entity → DTO
     private PromotionDto toDto(Promotion e) {
-        return new PromotionDto(e.getId(), e.getIcon(), e.getTitle(), e.getDescription());
+        return new PromotionDto(
+                e.getId(),
+                e.getIcon(),
+                e.getImage(),
+                e.getTitle(),
+                e.getDescription()
+        );
     }
 }
+
 
 

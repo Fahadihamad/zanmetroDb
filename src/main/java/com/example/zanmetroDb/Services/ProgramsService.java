@@ -2,6 +2,7 @@ package com.example.zanmetroDb.Services;
 
 import com.example.zanmetroDb.Model.Programs;
 import com.example.zanmetroDb.Repository.ProgramsRepository;
+import com.example.zanmetroDb.dto.ProgramsDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -10,24 +11,48 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ProgramsService {
+
     private final ProgramsRepository repository;
 
-    public Programs save(Programs e){ return repository.save(e); }
-
-    public Programs update(Programs e){
-        Programs existing = repository.findById(e.getId()).orElse(null);
-        if(existing == null) return null;
-        existing.setIcon(e.getIcon());
-        existing.setName(e.getName());
-        existing.setDescription(e.getDescription());
-        existing.setImage(e.getImage());
-        return repository.save(existing);
+    public ProgramsDto save(ProgramsDto dto) {
+        Programs e = new Programs();
+        e.setIcon(dto.getIcon());
+        e.setName(dto.getName());
+        e.setDescription(dto.getDescription());
+        e.setImage(dto.getImage());
+        return toDto(repository.save(e));
     }
 
-    public Programs findById(Long id){ return repository.findById(id).orElse(null); }
+    public ProgramsDto update(ProgramsDto dto) {
+        Programs existing = repository.findById(dto.getId()).orElse(null);
+        if (existing == null) return null;
 
-    public List<Programs> findAll(){ return repository.findAll(); }
+        existing.setIcon(dto.getIcon());
+        existing.setName(dto.getName());
+        existing.setDescription(dto.getDescription());
+        existing.setImage(dto.getImage());
+        return toDto(repository.save(existing));
+    }
 
-    public void delete(Long id){ repository.deleteById(id); }
+    public ProgramsDto findById(Long id) {
+        return repository.findById(id).map(this::toDto).orElse(null);
+    }
+
+    public List<ProgramsDto> findAll() {
+        return repository.findAll().stream().map(this::toDto).toList();
+    }
+
+    public void delete(Long id) {
+        repository.deleteById(id);
+    }
+
+    private ProgramsDto toDto(Programs e) {
+        return new ProgramsDto(
+                e.getId(),
+                e.getIcon(),
+                e.getName(),
+                e.getDescription(),
+                e.getImage()
+        );
+    }
 }
-

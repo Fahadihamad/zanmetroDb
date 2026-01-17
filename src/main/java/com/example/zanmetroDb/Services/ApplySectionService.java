@@ -2,6 +2,7 @@ package com.example.zanmetroDb.Services;
 
 import com.example.zanmetroDb.Model.ApplySection;
 import com.example.zanmetroDb.Repository.ApplySectionRepository;
+import com.example.zanmetroDb.dto.ApplySectionDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -10,24 +11,50 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ApplySectionService {
+
     private final ApplySectionRepository repository;
 
-    public ApplySection save(ApplySection e){ return repository.save(e); }
-
-    public ApplySection update(ApplySection e){
-        ApplySection existing = repository.findById(e.getId()).orElse(null);
-        if(existing == null) return null;
-        existing.setTitle(e.getTitle());
-        existing.setDescription(e.getDescription());
-        existing.setLeftImage(e.getLeftImage());
-        existing.setRightImage(e.getRightImage());
-        return repository.save(existing);
+    public ApplySectionDto save(ApplySectionDto dto) {
+        ApplySection e = new ApplySection();
+        e.setTitle(dto.getTitle());
+        e.setDescription(dto.getDescription());
+        e.setLeftImage(dto.getLeftImage());
+        e.setRightImage(dto.getRightImage());
+        return toDto(repository.save(e));
     }
 
-    public ApplySection findById(Long id){ return repository.findById(id).orElse(null); }
+    public ApplySectionDto update(ApplySectionDto dto) {
+        ApplySection existing = repository.findById(dto.getId()).orElse(null);
+        if (existing == null) return null;
 
-    public List<ApplySection> findAll(){ return repository.findAll(); }
+        existing.setTitle(dto.getTitle());
+        existing.setDescription(dto.getDescription());
+        existing.setLeftImage(dto.getLeftImage());
+        existing.setRightImage(dto.getRightImage());
+        return toDto(repository.save(existing));
+    }
 
-    public void delete(Long id){ repository.deleteById(id); }
+    public ApplySectionDto findById(Long id) {
+        return repository.findById(id).map(this::toDto).orElse(null);
+    }
+
+    public List<ApplySectionDto> findAll() {
+        return repository.findAll().stream().map(this::toDto).toList();
+    }
+
+    public void delete(Long id) {
+        repository.deleteById(id);
+    }
+
+    private ApplySectionDto toDto(ApplySection e) {
+        return new ApplySectionDto(
+                e.getId(),
+                e.getTitle(),
+                e.getDescription(),
+                e.getLeftImage(),
+                e.getRightImage()
+        );
+    }
 }
+
 

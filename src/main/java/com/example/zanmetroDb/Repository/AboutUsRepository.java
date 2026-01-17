@@ -1,2 +1,9 @@
-package com.example.zanmetroDb.Repository;public interface AboutUsRepository {
-}
+package com.example.zanmetroDb.Repository;
+
+import com.example.zanmetroDb.Model.AboutUs;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface AboutUsRepository extends JpaRepository<AboutUs, Long> {}
+

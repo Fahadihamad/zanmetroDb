@@ -2,6 +2,7 @@ package com.example.zanmetroDb.Services;
 
 import com.example.zanmetroDb.Model.FontImage;
 import com.example.zanmetroDb.Repository.FontImageRepository;
+import com.example.zanmetroDb.dto.FontImageDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -10,24 +11,48 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class FontImageService {
+
     private final FontImageRepository repository;
 
-    public FontImage save(FontImage e){ return repository.save(e); }
-
-    public FontImage update(FontImage e){
-        FontImage existing = repository.findById(e.getId()).orElse(null);
-        if(existing == null) return null;
-        existing.setImage(e.getImage());
-        existing.setTitle(e.getTitle());
-        existing.setSubtitle(e.getSubtitle());
-        existing.setDescription(e.getDescription());
-        return repository.save(existing);
+    public FontImageDto save(FontImageDto dto) {
+        FontImage e = new FontImage();
+        e.setImage(dto.getImage());
+        e.setTitle(dto.getTitle());
+        e.setSubtitle(dto.getSubtitle());
+        e.setDescription(dto.getDescription());
+        return toDto(repository.save(e));
     }
 
-    public FontImage findById(Long id){ return repository.findById(id).orElse(null); }
+    public FontImageDto update(FontImageDto dto) {
+        FontImage existing = repository.findById(dto.getId()).orElse(null);
+        if (existing == null) return null;
 
-    public List<FontImage> findAll(){ return repository.findAll(); }
+        existing.setImage(dto.getImage());
+        existing.setTitle(dto.getTitle());
+        existing.setSubtitle(dto.getSubtitle());
+        existing.setDescription(dto.getDescription());
+        return toDto(repository.save(existing));
+    }
 
-    public void delete(Long id){ repository.deleteById(id); }
+    public FontImageDto findById(Long id) {
+        return repository.findById(id).map(this::toDto).orElse(null);
+    }
+
+    public List<FontImageDto> findAll() {
+        return repository.findAll().stream().map(this::toDto).toList();
+    }
+
+    public void delete(Long id) {
+        repository.deleteById(id);
+    }
+
+    private FontImageDto toDto(FontImage e) {
+        return new FontImageDto(
+                e.getId(),
+                e.getImage(),
+                e.getTitle(),
+                e.getSubtitle(),
+                e.getDescription()
+        );
+    }
 }
-

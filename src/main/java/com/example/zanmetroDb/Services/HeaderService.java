@@ -2,6 +2,7 @@ package com.example.zanmetroDb.Services;
 
 import com.example.zanmetroDb.Model.Header;
 import com.example.zanmetroDb.Repository.HeaderRepository;
+import com.example.zanmetroDb.dto.HeaderDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -10,20 +11,36 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class HeaderService {
+
     private final HeaderRepository repository;
 
-    public Header save(Header h){ return repository.save(h); }
-
-    public Header update(Header h){
-        Header existing = repository.findById(h.getId()).orElse(null);
-        if(existing == null) return null;
-        existing.setParagraph(h.getParagraph());
-        return repository.save(existing);
+    public HeaderDto save(HeaderDto dto) {
+        Header h = new Header();
+        h.setParagraph(dto.getParagraph());
+        return toDto(repository.save(h));
     }
 
-    public Header findById(Long id){ return repository.findById(id).orElse(null); }
+    public HeaderDto update(HeaderDto dto) {
+        Header existing = repository.findById(dto.getId()).orElse(null);
+        if (existing == null) return null;
 
-    public List<Header> findAll(){ return repository.findAll(); }
+        existing.setParagraph(dto.getParagraph());
+        return toDto(repository.save(existing));
+    }
 
-    public void delete(Long id){ repository.deleteById(id); }
+    public HeaderDto findById(Long id) {
+        return repository.findById(id).map(this::toDto).orElse(null);
+    }
+
+    public List<HeaderDto> findAll() {
+        return repository.findAll().stream().map(this::toDto).toList();
+    }
+
+    public void delete(Long id) {
+        repository.deleteById(id);
+    }
+
+    private HeaderDto toDto(Header h) {
+        return new HeaderDto(h.getId(), h.getParagraph());
+    }
 }

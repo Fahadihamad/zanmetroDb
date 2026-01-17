@@ -2,6 +2,7 @@ package com.example.zanmetroDb.controllers;
 
 import com.example.zanmetroDb.Model.BackgroundImage;
 import com.example.zanmetroDb.Services.BackgroundImageService;
+import com.example.zanmetroDb.dto.BackgroundImageDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,16 +12,32 @@ import java.util.List;
 @RequestMapping("/api/background-images")
 @RequiredArgsConstructor
 public class BackgroundImageController {
+
     private final BackgroundImageService service;
 
     @PostMapping
-    public BackgroundImage create(@RequestBody BackgroundImage e){ return service.save(e); }
-    @PutMapping("/{id}") public BackgroundImage update(@PathVariable Long id, @RequestBody BackgroundImage e){
-        e.setId(id);
-        return service.update(e);
+    public BackgroundImageDto create(@RequestBody BackgroundImageDto dto) {
+        return service.save(dto);
     }
-    @GetMapping("/{id}") public BackgroundImage getById(@PathVariable Long id){ return service.findById(id); }
-    @GetMapping public List<BackgroundImage> getAll(){ return service.findAll(); }
-    @DeleteMapping("/{id}") public void delete(@PathVariable Long id){ service.delete(id); }
-}
 
+    @PutMapping("/{id}")
+    public BackgroundImageDto update(@PathVariable Long id, @RequestBody BackgroundImageDto dto) {
+        dto.setId(id);
+        return service.update(dto);
+    }
+
+    @GetMapping("/{id}")
+    public BackgroundImageDto getById(@PathVariable Long id) {
+        return service.findById(id);
+    }
+
+    @GetMapping
+    public List<BackgroundImageDto> getAll() {
+        return service.findAll();
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
+        service.delete(id);
+    }
+}

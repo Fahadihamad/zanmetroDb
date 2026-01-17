@@ -9,16 +9,16 @@ import lombok.Setter;
 import java.time.LocalDate;
 
 @Entity
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter @Setter
+@NoArgsConstructor @AllArgsConstructor
 public class News {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String title;
+
     private LocalDate date;
 
     @Lob
@@ -28,4 +28,3 @@ public class News {
     @Column(columnDefinition = "TEXT")
     private String description;
 }
-

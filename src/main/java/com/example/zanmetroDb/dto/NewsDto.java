@@ -12,10 +12,12 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class NewsDto {
+
     private Long id;
     private String title;
     private LocalDate date;
-    private byte[] image;
-    private String description;
+    private byte[] image;        // ✅ byte[]
+    private String description;  // ✅ String
 }
+
 
